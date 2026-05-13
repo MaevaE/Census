@@ -1,99 +1,130 @@
 import { Ionicons } from "@expo/vector-icons";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { router } from "expo-router";
+import {
+  Image,
+  Platform,
+  StatusBar,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 const PRIMARY = "#1D8C9C";
 
-type HeaderProps = {
-  title: string;
-  subtitle?: string;
-};
-
-export default function Header({ title, subtitle }: HeaderProps) {
+export default function Header() {
   return (
-    <View style={styles.container}>
-      <View>
-        <Text style={styles.brand}>Census System</Text>
-        <Text style={styles.title}>{title}</Text>
+    <>
+      <StatusBar backgroundColor={PRIMARY} barStyle="light-content" />
 
-        {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
+      <View style={styles.container}>
+        {/* ================= LEFT (LOGO ONLY) ================= */}
+        <View style={styles.leftContainer}>
+          <Image
+            source={require("@/assets/images/logo.png")}
+            style={styles.logo}
+            resizeMode="contain"
+          />
+        </View>
+
+        {/* ================= RIGHT (ICONS) ================= */}
+        <View style={styles.right}>
+          {/* NOTIFICATION */}
+          <TouchableOpacity
+            style={styles.iconBtn}
+            activeOpacity={0.8}
+            onPress={() =>
+              router.push("/rescenseur/Notification" as any)
+            }
+          >
+            <Ionicons
+              name="notifications-outline"
+              size={22}
+              color="#fff"
+            />
+
+            <View style={styles.dot} />
+          </TouchableOpacity>
+
+          {/* PROFILE */}
+          <TouchableOpacity
+            style={styles.profileBtn}
+            activeOpacity={0.8}
+            onPress={() =>
+              router.push("/rescenseur/ProfilScreen" as any)
+            }
+          >
+            <Ionicons name="person-circle" size={34} color="#fff" />
+          </TouchableOpacity>
+        </View>
       </View>
-
-      <View style={styles.right}>
-        {/* Notification */}
-        <TouchableOpacity style={styles.iconBtn}>
-          <Ionicons name="notifications-outline" size={22} color="#fff" />
-        </TouchableOpacity>
-
-        {/* Profile */}
-        <TouchableOpacity style={styles.profileBtn}>
-          <Ionicons name="person-circle-outline" size={28} color="#fff" />
-        </TouchableOpacity>
-      </View>
-    
-    </View>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 50,
-    marginBottom: 20,
+    width: "100%",
+    paddingTop:
+      Platform.OS === "android"
+        ? (StatusBar.currentHeight || 0) + 15
+        : 55,
+    paddingHorizontal: 20,
+    paddingBottom: 18,
+
+    backgroundColor: PRIMARY,
 
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
 
-    backgroundColor: PRIMARY,
-    padding: 18,
-    borderRadius: 18,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.12,
+    shadowRadius: 10,
+    elevation: 8,
   },
 
-  brand: {
-    color: "#d1f7ff",
-    fontSize: 12,
-    marginBottom: 4,
-  },
-
-  title: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: "#fff",
-  },
-
-  subtitle: {
-    marginTop: 4,
-    color: "#d1f7ff",
-    fontSize: 13,
-  },
-
-  notificationButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: "rgba(255,255,255,0.15)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-   right: {
+  // LEFT
+  leftContainer: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 10,
+  },
+
+  logo: {
+    width: 50,
+    height: 50,
+  },
+
+  // RIGHT
+  right: {
+    flexDirection: "row",
+    alignItems: "center",
   },
 
   iconBtn: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    backgroundColor: "rgba(255,255,255,0.15)",
+    width: 46,
+    height: 46,
+    borderRadius: 23,
+    backgroundColor: "rgba(255,255,255,0.18)",
     justifyContent: "center",
     alignItems: "center",
+    marginRight: 12,
+    position: "relative",
+  },
+
+  dot: {
+    position: "absolute",
+    top: 10,
+    right: 11,
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: "#ef4444",
+    borderWidth: 2,
+    borderColor: PRIMARY,
   },
 
   profileBtn: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    backgroundColor: "rgba(255,255,255,0.2)",
     justifyContent: "center",
     alignItems: "center",
   },

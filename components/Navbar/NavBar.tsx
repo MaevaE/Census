@@ -9,10 +9,10 @@ export default function BottomNavbar() {
   const pathname = usePathname();
 
   const tabs = [
-    { label: "Accueil", icon: "home", route: "" },
-    { label: "Ménages", icon: "people", route: "" },
-    { label: "Stats", icon: "stats-chart", route: "" },
-    { label: "Formulaire", icon: "create", route: "\rescenseur\recensement.tsx" },
+    { label: "Accueil", icon: "home", route: "/rescenseur/dashboard" },
+    { label: "Mission", icon: "map-outline", route: "/rescenseur/MissionScreen" },
+    { label: "Synchronisation",  icon: "sync-outline", route: "/rescenseur/Sync" },
+    { label: "Formulaire", icon: "create", route: "/rescenseur/recensement" },
   ];
 
   return (
