@@ -46,7 +46,7 @@ export default function FormStep6Screen() {
   const handleNext = () => {
     if (validateForm()) {
       router.push({
-        pathname: '/form-step6',
+        pathname: '/dashboard',
         params: { firstname, lastname, gender, age, occupation, maritalStatus, partnerName, childrenCount, ageRanges, address, zone, neighborhood }
       });
     }

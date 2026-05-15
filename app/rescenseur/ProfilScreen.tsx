@@ -105,7 +105,7 @@ export default function ProfileScreen({ navigation }: any) {
             <Text style={styles.actionText}>Changer mot de passe</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.actionBtn, { backgroundColor: "#ef4444" }]}>
+          <TouchableOpacity style={[styles.actionBtn, { backgroundColor: "#ef4444" }]} onPress={() => router.push('/auth/signup')}>
             <Ionicons name="log-out-outline" size={20} color="#fff" />
             <Text style={styles.actionText}>Déconnexion</Text>
           </TouchableOpacity>

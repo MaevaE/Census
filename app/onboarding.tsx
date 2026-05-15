@@ -16,7 +16,7 @@ export default function OnboardingScreen() {
   useEffect(() => {
     // Rediriger vers l'écran d'accueil après 2 secondes
     const timer = setTimeout(() => {
-      router.replace('/');
+      router.replace('/auth/signup');
     }, 2000);
 
     return () => clearTimeout(timer);
@@ -28,7 +28,7 @@ export default function OnboardingScreen() {
       
       <View style={styles.logoContainer}>
         <Image
-          source={require('../assets/images/logo.png')}
+          source={require('../assets/images/logoWhite.png')}
           style={styles.logo}
           resizeMode="contain"
         />

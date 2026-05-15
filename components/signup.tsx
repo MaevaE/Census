@@ -1,5 +1,4 @@
 import { Feather, MaterialIcons } from '@expo/vector-icons';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import {
@@ -8,7 +7,6 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
-  Switch,
   Text,
   TextInput,
   TouchableOpacity,
@@ -17,82 +15,58 @@ import {
 
 interface Errors {
   email?: string;
-  name?: string;
   password?: string;
-  dateOfBirth?: string;
 }
 
-export default function SignupScreen() {
+export default function LoginScreen() {
   const router = useRouter();
+
   const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
   const [password, setPassword] = useState('');
-  const [dateOfBirth, setDateOfBirth] = useState('');
-  const [newsletter, setNewsletter] = useState(false);
   const [errors, setErrors] = useState<Errors>({});
-  
-  // États pour le mot de passe
+
+  // Affichage mot de passe
   const [showPassword, setShowPassword] = useState(false);
-  
-  // États pour le DatePicker
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(new Date());
 
   const validateForm = (): boolean => {
     let newErrors: Errors = {};
 
     if (!email) {
-      newErrors.email = 'Email est requis';
+      newErrors.email = 'Email requis';
     } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = 'Email invalide';
-    }
-
-    if (!name) {
-      newErrors.name = 'Nom est requis';
-    } else if (name.length < 2) {
-      newErrors.name = 'Nom doit contenir au moins 2 caractères';
+      newErrors.email = 'Adresse email invalide';
     }
 
     if (!password) {
-      newErrors.password = 'Mot de passe est requis';
+      newErrors.password = 'Mot de passe requis';
     } else if (password.length < 6) {
-      newErrors.password = 'Mot de passe doit contenir au moins 6 caractères';
-    }
-
-    if (!dateOfBirth) {
-      newErrors.dateOfBirth = 'Date de naissance est requise';
+      newErrors.password =
+        'Le mot de passe doit contenir au moins 6 caractères';
     }
 
     setErrors(newErrors);
+
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleCreateAccount = () => {
+  const handleLogin = () => {
     if (validateForm()) {
       Alert.alert(
-        'Succès',
-        'Compte créé avec succès !',
-        [{ text: 'OK', onPress: () => router.push('/auth/signupHabitant') }]
+        'Connexion réussie',
+        'Bienvenue sur CENSUS',
+        [
+          {
+            text: 'Continuer',
+            onPress: () => router.push('/rescenseur/dashboard'),
+          },
+        ]
       );
     } else {
-      Alert.alert('Erreur', 'Veuillez corriger les erreurs dans le formulaire');
+      Alert.alert(
+        'Erreur',
+        'Veuillez corriger les informations du formulaire.'
+      );
     }
-  };
-
-  const handleDateChange = (event: any, selectedDateValue?: Date) => {
-    setShowDatePicker(false);
-    if (selectedDateValue) {
-      setSelectedDate(selectedDateValue);
-      const formattedDate = selectedDateValue.toLocaleDateString('fr-FR');
-      setDateOfBirth(formattedDate);
-      if (errors.dateOfBirth) {
-        setErrors({ ...errors, dateOfBirth: undefined });
-      }
-    }
-  };
-
-  const showDatePickerModal = () => {
-    setShowDatePicker(true);
   };
 
   return (
@@ -100,20 +74,39 @@ export default function SignupScreen() {
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        contentContainerStyle={styles.scrollContainer}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* HEADER */}
         <View style={styles.header}>
-          <Text style={styles.title}>Census</Text>
+          <Text style={styles.title}>CENSUS</Text>
+
           <Text style={styles.subtitle}>
-            Improve your village by participating in our censuses! Grow your community by sharing your opinions.
+            Connectez-vous pour accéder à la plateforme
+            numérique de recensement.
           </Text>
         </View>
 
+        {/* FORMULAIRE */}
         <View style={styles.form}>
-          {/* Champ Email */}
+          
+          {/* EMAIL */}
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Email</Text>
-            <View style={[styles.inputContainer, errors.email && styles.inputErrorBorder]}>
-              <MaterialIcons name="email" size={22} color="#1D8C9C" />
+            <Text style={styles.label}>Adresse Email</Text>
+
+            <View
+              style={[
+                styles.inputContainer,
+                errors.email && styles.inputErrorBorder,
+              ]}
+            >
+              <MaterialIcons
+                name="email"
+                size={22}
+                color="#1D8C9C"
+              />
+
               <TextInput
                 style={styles.input}
                 placeholder="votre@email.com"
@@ -124,95 +117,96 @@ export default function SignupScreen() {
                 autoCapitalize="none"
               />
             </View>
-            {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
+
+            {errors.email && (
+              <Text style={styles.errorText}>
+                {errors.email}
+              </Text>
+            )}
           </View>
 
-          {/* Champ Nom */}
+          {/* MOT DE PASSE */}
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Name</Text>
-            <View style={[styles.inputContainer, errors.name && styles.inputErrorBorder]}>
-              <Feather name="user" size={22} color="#1D8C9C" />
-              <TextInput
-                style={styles.input}
-                placeholder="Votre nom complet"
-                placeholderTextColor="#999"
-                value={name}
-                onChangeText={setName}
+            <Text style={styles.label}>Mot de passe</Text>
+
+            <View
+              style={[
+                styles.inputContainer,
+                errors.password && styles.inputErrorBorder,
+              ]}
+            >
+              <Feather
+                name="lock"
+                size={22}
+                color="#1D8C9C"
               />
-            </View>
-            {errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
-          </View>
 
-          {/* Champ Mot de passe avec œil */}
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Password</Text>
-            <View style={[styles.inputContainer, errors.password && styles.inputErrorBorder]}>
-              <Feather name="lock" size={22} color="#1D8C9C" />
               <TextInput
                 style={[styles.input, { flex: 1 }]}
-                placeholder="Mot de passe"
+                placeholder="Votre mot de passe"
                 placeholderTextColor="#999"
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry={!showPassword}
               />
-              <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                <Feather name={showPassword ? "eye-off" : "eye"} size={22} color="#1D8C9C" />
+
+              <TouchableOpacity
+                onPress={() =>
+                  setShowPassword(!showPassword)
+                }
+              >
+                <Feather
+                  name={showPassword ? 'eye-off' : 'eye'}
+                  size={22}
+                  color="#1D8C9C"
+                />
               </TouchableOpacity>
             </View>
-            {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
-          </View>
 
-          {/* Champ Date de naissance avec calendrier */}
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Date of birth</Text>
-            <TouchableOpacity 
-              style={[styles.inputContainer, errors.dateOfBirth && styles.inputErrorBorder]}
-              onPress={showDatePickerModal}
-              activeOpacity={0.7}
-            >
-              <Feather name="calendar" size={22} color="#1D8C9C" />
-              <Text style={[styles.dateText, !dateOfBirth && styles.placeholderText]}>
-                {dateOfBirth || 'DD/MM/YYYY'}
+            {errors.password && (
+              <Text style={styles.errorText}>
+                {errors.password}
               </Text>
-              <Feather name="chevron-right" size={18} color="#1D8C9C" />
-            </TouchableOpacity>
-            {errors.dateOfBirth && <Text style={styles.errorText}>{errors.dateOfBirth}</Text>}
+            )}
           </View>
 
-          {/* Newsletter */}
-          <View style={styles.newsletterContainer}>
-            <Switch
-              value={newsletter}
-              onValueChange={setNewsletter}
-              trackColor={{ false: '#ccc', true: '#1D8C9C' }}
-              thumbColor="#FFFFFF"
-            />
-            <Text style={styles.newsletterText}>Sign up for email newsletters</Text>
-          </View>
+          {/* MOT DE PASSE OUBLIÉ */}
+          <TouchableOpacity style={styles.forgotPassword}>
+            <Text style={styles.forgotPasswordText}>
+              Mot de passe oublié ?
+            </Text>
+          </TouchableOpacity>
 
-          {/* Bouton Create Account */}
+          {/* BOUTON */}
           <TouchableOpacity
             style={styles.createButton}
-            onPress={handleCreateAccount}
+            onPress={handleLogin}
             activeOpacity={0.8}
           >
-            <Text style={styles.createButtonText}>Create an Account</Text>
+            <Text style={styles.createButtonText}>
+              Se connecter
+            </Text>
           </TouchableOpacity>
+
+          {/* LIEN INSCRIPTION */}
+          <View style={styles.footer}>
+            <Text style={styles.footerText}>
+              Vous n’avez pas de compte ?
+            </Text>
+
+            <TouchableOpacity
+              onPress={() =>
+                router.push('/auth/signupHabitant')
+              }
+            >
+              <Text style={styles.signupText}>
+                {' '}Créer un compte
+              </Text>
+            </TouchableOpacity>
+          </View>
+
         </View>
       </ScrollView>
-
-      {/* DatePicker Modal pour iOS/Android */}
-      {showDatePicker && (
-        <DateTimePicker
-          value={selectedDate}
-          mode="date"
-          display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-          onChange={handleDateChange}
-          maximumDate={new Date()}
-          minimumDate={new Date(1900, 0, 1)}
-        />
-      )}
     </KeyboardAvoidingView>
   );
 }
@@ -222,14 +216,18 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFF8F8',
   },
+
   scrollContainer: {
     flexGrow: 1,
     padding: 25,
+    justifyContent: 'center',
   },
+
   header: {
     marginTop: 40,
     marginBottom: 30,
   },
+
   title: {
     fontSize: 42,
     fontWeight: 'bold',
@@ -237,24 +235,29 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 15,
   },
+
   subtitle: {
     fontSize: 16,
     color: '#666666',
     textAlign: 'center',
     lineHeight: 22,
   },
+
   form: {
     flex: 1,
   },
+
   inputGroup: {
     marginBottom: 20,
   },
+
   label: {
     fontSize: 16,
     fontWeight: '500',
     color: '#333333',
     marginBottom: 8,
   },
+
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -264,6 +267,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     paddingHorizontal: 15,
   },
+
   input: {
     flex: 1,
     paddingVertical: 12,
@@ -271,35 +275,27 @@ const styles = StyleSheet.create({
     color: '#333',
     marginLeft: 10,
   },
+
   inputErrorBorder: {
     borderColor: '#FF3B30',
   },
+
   errorText: {
     color: '#FF3B30',
     fontSize: 12,
     marginTop: 5,
   },
-  dateText: {
-    flex: 1,
-    paddingVertical: 12,
-    fontSize: 16,
-    marginLeft: 10,
-    color: '#333',
+
+  forgotPassword: {
+    alignSelf: 'flex-end',
+    marginBottom: 25,
   },
-  placeholderText: {
-    color: '#999',
+
+  forgotPasswordText: {
+    color: '#1D8C9C',
+    fontWeight: '600',
   },
-  newsletterContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 30,
-    marginTop: 10,
-  },
-  newsletterText: {
-    fontSize: 15,
-    color: '#555555',
-    marginLeft: 12,
-  },
+
   createButton: {
     backgroundColor: '#1D8C9C',
     paddingVertical: 16,
@@ -312,10 +308,28 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
   },
+
   createButtonText: {
     color: '#FFFFFF',
     fontSize: 18,
     fontWeight: 'bold',
     letterSpacing: 1,
+  },
+
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 10,
+  },
+
+  footerText: {
+    color: '#555555',
+    fontSize: 15,
+  },
+
+  signupText: {
+    color: '#1D8C9C',
+    fontSize: 15,
+    fontWeight: 'bold',
   },
 });
