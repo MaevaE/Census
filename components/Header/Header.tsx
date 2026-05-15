@@ -20,7 +20,7 @@ export default function Header() {
         {/* ================= LEFT (LOGO ONLY) ================= */}
         <View style={styles.leftContainer}>
           <Image
-            source={require("@/assets/images/logo.png")}
+            source={require("@/assets/images/logoWhite.png")}
             style={styles.logo}
             resizeMode="contain"
           />
